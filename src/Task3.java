@@ -7,24 +7,40 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Task3 {
 
     public static void main(String[] args) {
         List<Task> tasks = getTasks();
-        Map<TaskType, List<Task>> allTasksByType = new HashMap<>();
-        for (Task task : tasks) {
-            List<Task> existingTasksByType = allTasksByType.get(task.getType());
-            if (existingTasksByType == null) {
-                List<Task> tasksByType = new ArrayList<>();
-                tasksByType.add(task);
-                allTasksByType.put(task.getType(), tasksByType);
-            } else {
-                existingTasksByType.add(task);
-            }
-        }
-        for (Map.Entry<TaskType, List<Task>> entry : allTasksByType.entrySet()) {
-            out.println(String.format("%s =>> %s", entry.getKey(), entry.getValue()));
-        }
+        PredicateFilters predicateFilters = new PredicateFilters();
+
+        //Subtask1
+        String longestTitle = tasks
+                .stream()
+                .sorted((t1, t2) -> Integer.compare(t2.getTitle().length(), t1.getTitle().length()))
+                .limit(1)
+                .map(Task::getTitle)
+                .collect(Collectors.joining());
+
+        //Subtask2
+        long totalNumberOFTags = tasks
+                .stream()
+                .mapToLong(t -> t.getTags().size())
+                .sum();
+
+        //Subtask3
+        String titleSummary = tasks
+                .stream()
+                .map(Task::getTitle)
+                .collect(Collectors.joining("***"));
+
+        //Subtask4
+        Map<TaskType, List<Task>> tasksGroupedByType = tasks
+                .stream()
+                .collect(Collectors.groupingBy(Task::getType));
+
+
+
     }
 }
