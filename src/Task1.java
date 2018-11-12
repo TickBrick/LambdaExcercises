@@ -21,9 +21,9 @@ public class Task1{
                 .filter(pf.readingTitles)
                 .collect(Collectors.toList());
 
-       for(Task t : resultTaks){
-           System.out.println(t.getTitle());
-       }
+        out.println("---------------TASK 1---------------");
+        resultTaks.forEach(out::println);
+        out.println("\n");
 
     }
 }
