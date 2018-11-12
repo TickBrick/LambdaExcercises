@@ -3,26 +3,27 @@ import static java.lang.System.*;
 import domain.Task;
 import domain.TaskType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-public class Task1 {
+public class Task1{
 
     public static void main(String[] args) {
         List<Task> tasks = Task.getTasks();
-        List<String> titles = taskTitles(tasks);
-        for (String title : titles) {
-            out.println(title);
-        }
-    }
+        PredicateFilters pf = new PredicateFilters();
 
-    private static List<String> taskTitles(List<Task> tasks) {
-        List<String> readingTitles = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.getType() == TaskType.READING) {
-                readingTitles.add(task.getTitle());
-            }
-        }
-        return readingTitles;
-    }
+        List<Task> resultTaks = tasks
+                .stream()
+                .filter(pf.readingTitles)
+                .collect(Collectors.toList());
 
+       for(Task t : resultTaks){
+           System.out.println(t.getTitle());
+       }
+
+    }
 }

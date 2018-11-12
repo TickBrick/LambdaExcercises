@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class Task {
+public class Task{
 
     private String id;
     private String title;

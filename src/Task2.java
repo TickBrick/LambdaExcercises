@@ -1,31 +1,78 @@
 import static java.lang.System.out;
+import static java.time.LocalTime.MIN;
 
 import domain.Task;
 import domain.TaskType;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalField;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class Task2 {
 
     public static void main(String[] args) {
         List<Task> tasks = Task.getTasks();
 
-        List<Task> readingTasks = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.getType() == TaskType.READING) {
-                readingTasks.add(task);
-            }
-        }
-        Collections.sort(readingTasks, new Comparator<Task>() {
-            @Override
-            public int compare(Task t1, Task t2) {
-                return t1.getTitle().length() - t2.getTitle().length();
-            }
-        });
-        for (Task readingTask : readingTasks) {
-            out.println(readingTask.getTitle());
-        }
+        PredicateFilters predicateFilters = new PredicateFilters();
+
+
+        //Subtask1
+        List<Task> taskTitlesSortedByCreationDate = tasks
+                .stream()
+                .filter(predicateFilters.readingTitles)
+                .sorted(Comparator.comparing(Task::getCreatedOn))
+                .collect(Collectors.toList());
+
+
+        //Subtask2
+        List<Task> readingTasksByCreationDateSortedInReverse = tasks
+                .stream()
+                .filter(predicateFilters.readingTitles)
+                .sorted(Comparator.comparing(Task::getCreatedOn).reversed())
+                .collect(Collectors.toList());
+
+        //Subtask3
+        List<Task> distinctTasks = tasks
+                .stream()
+                .distinct()
+                .collect(Collectors.toList());
+
+
+        //Subtask4
+        List<Task> topTwoTasksSortedByCreationDate = tasks
+                .stream()
+                .sorted(Comparator.comparing(Task::getCreatedOn))
+                .collect(Collectors.toList())
+                .subList(0,1);
+
+        //Subtask5
+        Set<String> allUniqueTags = tasks
+                .stream()
+                .flatMap(task -> task.getTags().stream())
+                .collect(Collectors.toSet());
+
+        //Subtask6
+        boolean tagBook = tasks
+                .stream()
+                .filter(predicateFilters.readingTitles)
+                .noneMatch(task -> task.getTags().isEmpty());
+
+
+        //Subtask7
+        String titleSummary = tasks
+                .stream()
+                .map(Task::getTitle)
+                .collect(Collectors.joining("***"));
+
+
+
+
+
     }
 }
